@@ -47,7 +47,7 @@ if menu == "📦 Resource Management":
         capa_eco = st.number_input("Economy Seats", min_value=0, max_value=400, value=150)
         capa_bus = st.number_input("Business Seats", min_value=0, max_value=100, value=20)
         
-        if st.button("Register Aircraft "):
+        if st.button("Register Aircraft"):
             if tail_num:
                 try:
                     execute_query("INSERT INTO FLEET VALUES (?, ?, ?, ?)", (tail_num, model, capa_eco, capa_bus), commit=True)
