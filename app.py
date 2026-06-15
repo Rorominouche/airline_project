@@ -42,7 +42,7 @@ if menu == "📦 Resource Management":
     
     with col1:
         st.subheader("➕ Add Aircraft to Fleet")
-        tail_num = st.text_input("Tail Number (e.g., F-GZNE)").upper()
+        tail_num = st.text_input("Tail Number (e.g., F-JZNE)").upper()
         model = st.selectbox("Aircraft Model", ["Airbus A320", "Airbus A350", "Boeing 737", "Boeing 777"])
         capa_eco = st.number_input("Economy Seats", min_value=0, max_value=400, value=150)
         capa_bus = st.number_input("Business Seats", min_value=0, max_value=100, value=20)
