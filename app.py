@@ -21,7 +21,7 @@ def execute_query(query, params=(), commit=False, fetch=False):
     if fetch:
         # Turso renvoie les données sous forme de lignes d'objets, 
         # on les convertit en listes/tuples classiques pour que Streamlit reste content
-        data = [list(row.values()) for row in result.rows]
+        data = [list(row) for row in result.rows]
         
     client.close()
     return data
@@ -80,8 +80,9 @@ if menu == "📦 Resource Management":
     try:
         fleet_data = execute_query("SELECT * FROM FLEET", fetch=True)
         st.dataframe(fleet_data, column_config={"0": "Tail Number", "1": "Aircraft Model", "2": "Eco Capacity", "3": "Business Capacity"})
-    except Exception:
-        st.info("No aircraft registered yet or tables not initialized.")
+    except Exception as e:
+        #st.info("No aircraft registered yet or tables not initialized.")
+        st.error(f"Erreur technique Fleet : {e}")
 
 # =====================================================================
 # MODULE 2 : FLIGHT SCHEDULING (Inventory & Planning)
