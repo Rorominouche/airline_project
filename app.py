@@ -8,15 +8,17 @@ from datetime import datetime
 # TURSO CONNECTION
 # =====================================================================
 TURSO_URL = "https://airline-faustine-ambrine.aws-eu-west-1.turso.io"
-TURSO_TOKEN = "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3ODE2MTQyMTYsImlkIjoiMDE5ZWNmYmEtZWUwMS03YWNiLTk2YjQtOGIyYzcxZWI2YmM1IiwicmlkIjoiYmFiZDVlMWItOWNlOS00MDQ1LThjMWQtODQ3NjY3MThjOGY1In0.xUmk2p0anjZGi1t_txWGRxscu_grCUhA-QzSsMqUwYjSC0jRCWPZxykJMPsv8IFR2tbwaGD3JkVLthkDWUdQAw"
 
 def execute_query(query, params=(), commit=False, fetch=False):
     client = libsql_client.create_client_sync(url=TURSO_URL, auth_token=TURSO_TOKEN)
     result = client.execute(query, params)
     data = []
+
     if fetch:
+
         data = [list(row) for row in result.rows]
     client.close()
+
     return data
 
 # =====================================================================
@@ -50,14 +52,15 @@ if menu == "📦 Resource Management":
 
         if st.button("Register Aircraft"):
             if tail_num:
+
                 try:
                     execute_query("INSERT INTO Fleet VALUES (?, ?, ?, ?)", (tail_num, model, int(capa_eco), int(capa_bus)), commit=True)
                     st.success(f"Aircraft {tail_num} successfully registered!")
                     st.rerun()
+
                 except Exception as e:
-                    st.error(f"Error or duplicate entry: {e}")
-            else:
-                st.warning("Please enter a valid Tail Number.")
+
+                    st.error(e)
 
     with col2:
         st.subheader("➕ Create Route")
@@ -67,15 +70,15 @@ if menu == "📦 Resource Management":
 
         if st.button("Create Route"):
             if dep and arr:
+
                 route_id = f"{dep}-{arr}"
+
                 try:
                     execute_query("INSERT INTO Route VALUES (?, ?, ?, ?)", (route_id, dep, arr, str(duration_text)), commit=True)
                     st.success(f"Route {route_id} successfully created!")
                     st.rerun()
+
                 except Exception as e:
-                    st.error(f"Error or duplicate entry: {e}")
-            else:
-                st.warning("Please fill in both airport codes.")
 
     st.write("---")
     st.subheader("📊 Active Fleet (Live Cloud)")
@@ -98,16 +101,63 @@ elif menu == "📅 Flight Scheduling":
         fleet_list, routes_list = [], []
 
     if not fleet_list or not routes_list:
-        st.warning("⚠️ Action Required: You must register at least one aircraft and one route in 'Resource Management' before scheduling a flight.")
+
+        st.warning(
+
+        "⚠️ Add aircraft and routes first."
+
+        )
+
     else:
-        st.subheader("🗓️ Schedule a New Flight")
-        c1, c2, c3 = st.columns(3)
+
+        st.subheader(
+
+        "🗓️ Schedule a New Flight"
+
+        )
+
+        # ⚠️ ON NE CHANGE PAS CES COLONNES
+
+        c1,c2,c3 = st.columns(3)
+
         with c1:
-            flight_num = st.text_input("Flight Number (e.g., AM102)").upper().strip()
-            selected_route = st.selectbox("Select Route", routes_list)
+
+            flight_num = st.text_input(
+
+            "Flight Number"
+
+            ).upper().strip()
+
+            selected_route = st.selectbox(
+
+            "Select Route",
+
+            routes_list
+
+            )
+
         with c2:
-            selected_aircraft = st.selectbox("Assign Aircraft (Tail Num)", fleet_list)
-            price_eco = st.number_input("Base Price Economy (€)", min_value=10.0, max_value=2000.0, value=99.0)
+
+            selected_aircraft = st.selectbox(
+
+            "Assign Aircraft",
+
+            fleet_list
+
+            )
+
+            price_eco = st.number_input(
+
+            "Price Economy",
+
+            min_value=10.0,
+
+            max_value=2000.0,
+
+            value=99.0
+
+            )
+
         with c3:
             date_flight = st.date_input("Departure Date")
             time_flight = st.time_input("Departure Time")
