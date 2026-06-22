@@ -21,9 +21,9 @@ TEST_ROUTES = [
     ("NCE-DXB", "NCE", "DXB", "380")
 ]
 
-print("🚀 Lancement du robot de création de routes dans 5 secondes...")
+print("🚀 Lancement du robot de création de routes dans 10 secondes...")
 print("👉 Ouvre ton navigateur sur l'appli (onglet Routes) et mets-le en PLEIN ÉCRAN !")
-time.sleep(5)
+time.sleep(10)
 
 for i, (route_id, dep, arr, duration) in enumerate(TEST_ROUTES):
     print(f"🤖 Ligne {i+1}/{len(TEST_ROUTES)} : Configuration du vol {route_id}")
